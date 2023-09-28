@@ -1,0 +1,14 @@
+{
+  "bracketSpacing": false,
+  "singleQuote": true,
+  "printWidth": 80,
+  "trailingComma": "all",
+  "arrowParens": "avoid",
+  "plugins": [
+    "prettier-plugin-organize-imports",
+    "prettier-plugin-tailwindcss"
+  ],
+  "tailwindConfig": "./tailwind.config.js",
+  "tailwindAttributes": ["className"],
+  "tailwindFunctions": ["clsx", "cva", "cn"]
+}
