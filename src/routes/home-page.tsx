@@ -190,8 +190,8 @@ const HomePage: React.FC = () => {
                       alt="audio waves"
                       className="h-10 w-10 rounded-sm border-2 border-secondary"
                     />
-                    <div className=" max-w-sm space-y-1">
-                      <p className="truncate font-light tracking-wide">
+                    <div className="w-full space-y-1">
+                      <p className="max-w-sm truncate font-light tracking-wide">
                         {uploadingFile?.file.name}
                       </p>
                       <div className="text-sm font-light text-muted-foreground">
