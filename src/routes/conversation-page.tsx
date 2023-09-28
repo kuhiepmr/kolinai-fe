@@ -8,7 +8,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from '@/components/ui/form';
 import {Input} from '@/components/ui/input';
 import MainLayout from '@/components/ui/main-layout';
@@ -116,35 +115,35 @@ const ConversationPage: React.FC = () => {
                 <FormItem>
                   <FormLabel>Your uploaded file:</FormLabel>
                   <Card className="w-96 rounded-sm border-2 border-dashed shadow-none">
-                    <CardContent className="flex flex-col space-y-2 p-4 text-center">
-                      <img
-                        src={AudioWaves}
-                        alt="audio waves"
-                        className="mx-auto h-12 w-12 rounded-sm border-2 border-secondary"
-                      />
-                      <p className="truncate font-light tracking-wide">
-                        {conversation.fileName}
-                      </p>
-                      <div className="text-sm font-light text-muted-foreground">
-                        <span>
-                          {Math.round(conversation.fileSize / 1000) / 1000} MB
-                        </span>
-                        <span> - </span>
-                        <span>
-                          Uploaded on{' '}
-                          {new Date(conversation.createdAt).toLocaleDateString(
-                            'en-US',
-                            {
+                    <a href={fileURL} target="_blank" rel="noreferrer">
+                      <CardContent className="flex flex-col space-y-2 p-4 text-center">
+                        <img
+                          src={AudioWaves}
+                          alt="audio waves"
+                          className="mx-auto h-12 w-12 rounded-sm border-2 border-secondary"
+                        />
+                        <p className="truncate font-light tracking-wide">
+                          {conversation.fileName}
+                        </p>
+                        <div className="text-sm font-light text-muted-foreground">
+                          <span>
+                            {Math.round(conversation.fileSize / 1000) / 1000} MB
+                          </span>
+                          <span> - </span>
+                          <span>
+                            Uploaded on{' '}
+                            {new Date(
+                              conversation.createdAt,
+                            ).toLocaleDateString('en-US', {
                               year: 'numeric',
                               month: '2-digit',
                               day: '2-digit',
-                            },
-                          )}
-                        </span>
-                      </div>
-                    </CardContent>
+                            })}
+                          </span>
+                        </div>
+                      </CardContent>
+                    </a>
                   </Card>
-                  <FormMessage />
                 </FormItem>
                 <FormField
                   control={form.control}
@@ -155,7 +154,6 @@ const ConversationPage: React.FC = () => {
                       <FormControl>
                         <Input placeholder="Untitled Conversation" {...field} />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -196,7 +194,6 @@ const ConversationPage: React.FC = () => {
                           ))}
                         </SelectContent>
                       </Select>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -215,8 +212,6 @@ const ConversationPage: React.FC = () => {
                           {...field}
                         />
                       </FormControl>
-
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
