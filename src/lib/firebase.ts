@@ -1,8 +1,6 @@
-import {getAnalytics} from 'firebase/analytics';
 import {initializeApp} from 'firebase/app';
 import {getAuth} from 'firebase/auth';
 import {getDatabase} from 'firebase/database';
-import {getPerformance} from 'firebase/performance';
 import {getStorage} from 'firebase/storage';
 
 const firebaseConfig = {
@@ -16,11 +14,8 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-//type the auth and firestore functions
 const auth = getAuth();
 const database = getDatabase(app);
-const performance = getPerformance(app);
 const storage = getStorage(app);
 
 const actionCodeSettings = {
@@ -31,4 +26,4 @@ const actionCodeSettings = {
   handleCodeInApp: true,
 };
 
-export {actionCodeSettings, analytics, auth, database, performance, storage};
+export {actionCodeSettings, auth, database, storage};

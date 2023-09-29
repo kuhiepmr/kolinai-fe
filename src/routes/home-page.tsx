@@ -14,11 +14,11 @@ import {Input} from '@/components/ui/input';
 import MainLayout from '@/components/ui/main-layout';
 import {Progress} from '@/components/ui/progress';
 import {toast, toastJSON} from '@/components/ui/use-toast';
-import {database, storage} from '@/lib/firebase';
+import {storage} from '@/lib/firebase';
 import {getFileSizeInMB} from '@/lib/utils';
+import {createConversation} from '@/queries/createConversation';
 import {useCurrentUser} from '@/queries/useCurrentUser';
 import {Label} from '@radix-ui/react-label';
-import {ref as databaseRef, set} from 'firebase/database';
 import {
   UploadTask,
   getMetadata,
@@ -103,19 +103,9 @@ const HomePage: React.FC = () => {
         toastJSON('Failed to upload file', error);
       },
       () => {
-        // Replace all ".", "#", "$", "[", or "]" with "_"
-        const conversationPath = filePath.replace(/[\.\#\$\[\]]/g, '_');
-        set(databaseRef(database, `conversations/${conversationPath}`), {
-          name: fileName,
-          type: '',
-          context: '',
-          status: 'new',
-          createdAt: new Date().toISOString(),
-          fileName: fileName,
-          fileSize: file.size,
-        })
-          .then(() => {
-            navigate(`/conversations/${conversationPath.split('/')[1]}`);
+        createConversation(file, filePath)
+          .then(id => {
+            navigate(`/conversations/${id}`);
             toast({title: 'File uploaded successfully'});
           })
           .catch(error => {
@@ -176,12 +166,7 @@ const HomePage: React.FC = () => {
               </DialogHeader>
               {!!uploadingFile?.file && (
                 <Card
-                  key={
-                    uploadingFile?.file.name ??
-                    `You are ChatGPT, a large language model trained by OpenAI.
-                  Carefully heed the user's instructions.
-                  Respond using Markdown.`
-                  }
+                  key={uploadingFile?.file.name}
                   className="w-full rounded-sm border-2 shadow-none"
                 >
                   <CardContent className="flex w-full justify-start space-x-2 p-2">
