@@ -135,7 +135,8 @@ const Conversations: React.FC = () => {
                   <Button
                     size="icon"
                     variant="ghost"
-                    className="w-fit bg-background"
+                    className="bg-background px-2"
+                    aria-label="delete"
                     value={conversation.name}
                     onClick={e => handleDeleteConversation(e, conversation)}
                   >

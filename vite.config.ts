@@ -1,4 +1,3 @@
-import {nodeResolve} from '@rollup/plugin-node-resolve';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import {defineConfig} from 'vite';
@@ -13,20 +12,11 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      input: 'src/main.tsx',
       output: {
-        // https://rollupjs.org/guide/en/#outputdir
         dir: 'dist',
         manualChunks: {
-          // hook-form and resolver
-          'react-hook-form': ['react-hook-form', '@hookform/resolvers'],
           // firebase
-          firebase: [
-            'firebase/app',
-            'firebase/auth',
-            'firebase/database',
-            'firebase/storage',
-          ],
+          firebase: ['firebase/app', 'firebase/auth'],
           // react
           react: ['react', 'react-dom', 'react-router', 'react-router-dom'],
           // radix-ui
@@ -43,16 +33,16 @@ export default defineConfig({
             '@radix-ui/react-toast',
             '@radix-ui/react-tooltip',
           ],
+          // hook-form and resolver
+          'react-hook-form': ['react-hook-form', '@hookform/resolvers'],
           // axios
           axios: ['axios'],
           // react-lottie
-          'react-lottie': ['react-lottie'],
+          'react-lottie': ['@alfonmga/react-lottie-light-ts'],
           // zod
           zod: ['zod'],
         },
       },
-      // https://rollupjs.org/configuration-options/
-      plugins: [nodeResolve()],
     },
   },
 });

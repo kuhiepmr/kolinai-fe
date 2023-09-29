@@ -1,9 +1,10 @@
 import AnimateData from '@/assets/animate.json';
-import Lottie from 'react-lottie';
+import {Lottie} from '@alfonmga/react-lottie-light-ts/';
+import {memo} from 'react';
 
-const WaveLoading: React.FC = () => (
+const WaveLoading: React.FC = memo(() => (
   <Lottie
-    options={{
+    config={{
       loop: true,
       autoplay: true,
       animationData: AnimateData,
@@ -12,5 +13,5 @@ const WaveLoading: React.FC = () => (
       },
     }}
   />
-);
+));
 export default WaveLoading;
