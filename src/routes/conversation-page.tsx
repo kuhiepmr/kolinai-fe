@@ -1,5 +1,6 @@
 import AudioWaves from '@/assets/audio-waves.svg';
 import Insight from '@/assets/insight.svg';
+import {Badge} from '@/components/ui/badge';
 import {Button} from '@/components/ui/button';
 import {Card, CardContent} from '@/components/ui/card';
 import {
@@ -41,6 +42,7 @@ const FormSchema = z.object({
 const ConversationPage: React.FC = () => {
   const {conversationId} = useParams<{conversationId: string}>();
   const conversation = useConversation({conversationId: conversationId ?? ''});
+
   const currentUser = useCurrentUser();
   const fileURL = useFileURL({conversation, currentUser});
   const insightRef = useRef<HTMLDivElement>(null);
@@ -277,17 +279,41 @@ const ConversationPage: React.FC = () => {
                 </div>
               )}
               {conversation.status === 'insight-generated' && (
-                <>
+                <div className="space-y-2">
                   <h4 className="text-lg font-semibold tracking-wide">
                     Sentiment
                   </h4>
                   <p className="text-base font-light">
                     Emotion tracked based on your conversation
                   </p>
-                  <div className="h-24 w-24">
-                    <WaveLoading />
+                  <div className="flex flex-row space-x-6">
+                    {conversation.insight?.emotions?.map(({Emotion, Score}) => (
+                      <div
+                        key={Emotion}
+                        className="flex flex-row items-baseline justify-between space-x-1"
+                      >
+                        <p className="text-sm font-light">{Score}</p>
+                        <Badge className="bg-secondary text-base font-light text-primary">
+                          {Emotion}
+                        </Badge>
+                      </div>
+                    ))}
                   </div>
-                </>
+                  <h4 className="text-lg font-semibold tracking-wide">
+                    Transcript
+                  </h4>
+                  <p className="text-base font-light">
+                    {conversation.insight?.transcription}
+                  </p>
+                  <div className="py-4">
+                    JSON data
+                    <pre className="mt-2 max-w-2xl rounded-md bg-muted p-4">
+                      <code className="text-sm">
+                        {JSON.stringify(conversation.insight, null, 2)}
+                      </code>
+                    </pre>
+                  </div>
+                </div>
               )}
             </div>
           )}

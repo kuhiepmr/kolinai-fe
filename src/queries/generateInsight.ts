@@ -11,20 +11,25 @@ export const generateInsight = async (
 ) => {
   const fileName = getStoragePath(currentUser, conversation);
 
+  const tempURL = localStorage.getItem('baseURL');
+  if (tempURL) {
+    axios.defaults.baseURL = tempURL;
+  }
+
   try {
     toast({title: 'Generating insight'});
     await updateConversation(
       {...conversation, status: 'insight-generating'},
       currentUser,
     );
-    const insight = await axios.post<Insight>('/transcribe_and_summarize', {
+    const res = await axios.post<Insight>('/transcribe_and_summarize', {
       fileName,
       type: conversation.type,
       context: conversation.context,
     });
 
     await updateConversation(
-      {id: conversation.id, insight, status: 'insight-generated'},
+      {...conversation, insight: res.data, status: 'insight-generated'},
       currentUser,
     );
     return;
@@ -33,7 +38,7 @@ export const generateInsight = async (
       message: (error as Error).message,
     });
     await updateConversation(
-      {id: conversation.id, status: 'insight-failed'},
+      {...conversation, status: 'insight-failed'},
       currentUser,
     );
   }

@@ -13,4 +13,12 @@ export interface Conversation extends DBConversation {
   id: string;
 }
 
-export interface Insight {}
+export interface Emotion {
+  Emotion: string;
+  Score: number;
+}
+
+export interface Insight {
+  transcription: string;
+  emotions: Emotion[];
+}
