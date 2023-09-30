@@ -22,6 +22,8 @@ import {
 import {Textarea} from '@/components/ui/textarea';
 import WaveLoading from '@/components/ui/wave-loading';
 import {types} from '@/constants/data';
+import {EEmotion} from '@/lib/models';
+import {cn} from '@/lib/utils';
 import {generateInsight} from '@/queries/generateInsight';
 import {useConversation} from '@/queries/useConversation';
 import {useCurrentUser} from '@/queries/useCurrentUser';
@@ -32,6 +34,14 @@ import {useEffect, useRef} from 'react';
 import {useForm} from 'react-hook-form';
 import {Link, useParams} from 'react-router-dom';
 import {z} from 'zod';
+
+const EMOTION_BG_COLORS: Record<EEmotion, string> = {
+  anger: 'bg-red-500',
+  disgust: 'bg-blue-500',
+  fear: 'bg-orange-500',
+  happiness: 'bg-green-500',
+  sadness: 'bg-zinc-500',
+};
 
 const FormSchema = z.object({
   name: z.string().optional(),
@@ -246,14 +256,18 @@ const ConversationPage: React.FC = () => {
           </div>
           {conversation.status !== 'new' && (
             <div
-              className="w-full space-y-2 bg-background p-8"
+              className="flex w-full flex-col bg-background p-8"
               ref={insightRef}
             >
-              <h3 className="text-xl font-semibold tracking-wide">
-                Conversation Insight
-              </h3>
-              <p className="text-base font-light">Based on the conversation</p>
-              <div className="max-w-2xl">
+              <div>
+                <h3 className="text-xl font-semibold tracking-wide">
+                  Conversation Insight
+                </h3>
+                <p className="text-base font-light">
+                  Based on the conversation
+                </p>
+              </div>
+              <div className="max-w-2xl pt-4">
                 {fileURL && (
                   <audio controls className="w-full rounded-none">
                     <source src={fileURL} type="audio/wav" />
@@ -279,35 +293,56 @@ const ConversationPage: React.FC = () => {
                 </div>
               )}
               {conversation.status === 'insight-generated' && (
-                <div className="space-y-2">
-                  <h4 className="text-lg font-semibold tracking-wide">
-                    Sentiment
-                  </h4>
-                  <p className="text-base font-light">
-                    Emotion tracked based on your conversation
-                  </p>
-                  <div className="flex flex-row space-x-6">
-                    {conversation.insight?.emotions?.map(({Emotion, Score}) => (
-                      <div
-                        key={Emotion}
-                        className="flex flex-row items-baseline justify-between space-x-1"
-                      >
-                        <p className="text-sm font-light">{Score}</p>
-                        <Badge className="bg-secondary text-base font-light text-primary">
-                          {Emotion}
-                        </Badge>
-                      </div>
-                    ))}
+                <div className="mt-4 space-y-4">
+                  <div className="space-y-1">
+                    <h4 className="text-lg font-semibold tracking-wide">
+                      Sentiment
+                    </h4>
+                    <p className="text-base font-light">
+                      Emotion tracked based on your conversation
+                    </p>
+                    <div className="flex flex-row flex-wrap space-x-4">
+                      {conversation.insight?.emotions
+                        // Sort by Score in descending order, format 'DD%'
+                        ?.sort(
+                          (a, b) =>
+                            Number(b.Score.replace('%', '')) -
+                            Number(a.Score.replace('%', '')),
+                        )
+                        .map(({Emotion, Score}) => (
+                          <div
+                            key={Emotion}
+                            className="mt-2 flex flex-row items-center justify-between space-x-1"
+                          >
+                            <p className="text-sm font-light">{Score}</p>
+                            <Badge className="space-x-2 bg-secondary text-base font-light text-primary hover:bg-secondary">
+                              <div
+                                className={cn(
+                                  'h-4 w-4 rounded-sm',
+                                  EMOTION_BG_COLORS[Emotion as EEmotion],
+                                )}
+                              ></div>
+                              <span className="text-sm">
+                                {Emotion[0].toUpperCase() + Emotion.slice(1)}
+                              </span>
+                            </Badge>
+                          </div>
+                        ))}
+                    </div>
                   </div>
-                  <h4 className="text-lg font-semibold tracking-wide">
-                    Transcript
-                  </h4>
-                  <p className="text-base font-light">
-                    {conversation.insight?.transcription}
-                  </p>
-                  <div className="py-4">
-                    JSON data
-                    <pre className="mt-2 max-w-2xl rounded-md bg-muted p-4">
+                  <div className="space-y-1">
+                    <h4 className="text-lg font-semibold tracking-wide">
+                      Transcript
+                    </h4>
+                    <p className="text-base font-light">
+                      {conversation.insight?.transcription}
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <h4 className="text-lg font-semibold tracking-wide">
+                      JSON data
+                    </h4>
+                    <pre className="mt-2 max-w-2xl items-center whitespace-pre-wrap rounded-md bg-muted p-4">
                       <code className="text-sm">
                         {JSON.stringify(conversation.insight, null, 2)}
                       </code>

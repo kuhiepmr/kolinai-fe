@@ -13,9 +13,17 @@ export interface Conversation extends DBConversation {
   id: string;
 }
 
+export enum EEmotion {
+  Anger = 'anger',
+  Disgust = 'disgust',
+  Fear = 'fear',
+  Happiness = 'happiness',
+  Sadness = 'sadness',
+}
+
 export interface Emotion {
   Emotion: string;
-  Score: number;
+  Score: string;
 }
 
 export interface Insight {
